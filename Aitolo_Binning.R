@@ -28,3 +28,21 @@ fastp --thread 16 -i $SAMPLE_R1_C14 -I $SAMPLE_R2_C14 -o $OUT_R1_C14 -O $OUT_R2_
 fastp --thread 16 -i $SAMPLE_R1_C15 -I $SAMPLE_R2_C15 -o $OUT_R1_C15 -O $OUT_R2_C15 -g -x --adapter_sequence=AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --adapter_sequence_r2=AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --qualified_quality_phred 33 --overrepresentation_analysis 5 --cut_right cut_right_window_size=5 cut_right_mean_quality=15 --length_required 50 &
 fastp --thread 16 -i $SAMPLE_R1_C16 -I $SAMPLE_R2_C16 -o $OUT_R1_C16 -O $OUT_R2_C16 -g -x --adapter_sequence=AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --adapter_sequence_r2=AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --qualified_quality_phred 33 --overrepresentation_analysis 5 --cut_right cut_right_window_size=5 cut_right_mean_quality=15 --length_required 50 &
 echo "Fastp Done"
+
+#Run FASTQC again to ensure FASTP trimmed the sequences
+nohup time fastqc -t 15 *.fastq
+
+#INTERLEAVE THE TWO FILES R1 & R2#
+
+
+###ASSEMBLY###
+
+#MEGAHIT#
+#Conda Install and Activate#
+conda install -c bioconda megahit
+
+#Make sure its installed 
+megahit -h
+
+#Run assembly on trimmed and interleaved reads
+megahit --12 sample.fastq.qz -t 35 -m 0.5 results_outdir
